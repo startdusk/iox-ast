@@ -17,3 +17,7 @@ lox-ast/r: fmt
 .PHONY: lox-ast/pid
 lox-ast/pid:
 	@pgrep -af lox-ast
+
+.PHONY: lox-ast/test
+lox-ast/test:
+	@cargo nextest
