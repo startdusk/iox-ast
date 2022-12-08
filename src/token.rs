@@ -1,11 +1,11 @@
 use std::fmt;
 
-use crate::TokenType;
+use crate::{Object, TokenType};
 
 pub struct Token {
     typ: TokenType,
     lexeme: String,
-    literal: Option<String>,
+    literal: Option<Object>,
     line: usize,
 }
 
@@ -13,7 +13,7 @@ impl Token {
     pub fn new(
         typ: TokenType,
         lexeme: impl Into<String>,
-        literal: Option<String>,
+        literal: Option<Object>,
         line: usize,
     ) -> Self {
         Self {
