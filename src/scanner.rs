@@ -1,25 +1,6 @@
-use phf::phf_map;
+use std::collections::HashMap;
 
 use crate::{LoxError, Object, Token, TokenType};
-
-static KEYWORDS: phf::Map<&str, TokenType> = phf_map! {
-    "and" => TokenType::And,
-    "class" => TokenType::Class,
-    "else" => TokenType::Else,
-    "false" => TokenType::False,
-    "for" => TokenType::For,
-    "fun" => TokenType::Fun,
-    "if" => TokenType::If,
-    "nil" => TokenType::Nil,
-    "or" => TokenType::Or,
-    "print" => TokenType::Print,
-    "return" => TokenType::Return,
-    "super" => TokenType::Super,
-    "this" =>  TokenType::This,
-    "true" => TokenType::True,
-    "var" =>  TokenType::Var,
-    "while" => TokenType::While,
-};
 
 pub struct Scanner {
     source: Vec<char>,
@@ -27,6 +8,8 @@ pub struct Scanner {
     start: usize,
     current: usize,
     line: usize,
+
+    keywords: HashMap<&'static str, TokenType>,
 }
 
 impl Scanner {
@@ -37,6 +20,23 @@ impl Scanner {
             start: 0,
             current: 0,
             line: 1,
+            keywords: HashMap::from([
+                ("and", TokenType::And),
+                ("class", TokenType::Class),
+                ("else", TokenType::Else),
+                ("false", TokenType::False),
+                ("for", TokenType::For),
+                ("fun", TokenType::Fun),
+                ("if", TokenType::If),
+                ("nil", TokenType::Nil),
+                ("or", TokenType::Or),
+                ("print", TokenType::Print),
+                ("return", TokenType::Return),
+                ("super", TokenType::Super),
+                ("this", TokenType::This),
+                ("true", TokenType::True),
+                ("var", TokenType::Var),
+            ]),
         }
     }
 
@@ -149,7 +149,7 @@ impl Scanner {
             self.advance();
         }
         let text: String = self.source[self.start..self.current].iter().collect();
-        if let Some(&typ) = KEYWORDS.get(text.as_str()) {
+        if let Some(&typ) = self.keywords.get(text.as_str()) {
             self.add_token(typ);
         } else {
             self.add_token(TokenType::Identifier);
